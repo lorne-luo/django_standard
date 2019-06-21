@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 
     # THIRD_PARTY_APPS
+    'django_nose',
 
     # LOCAL_APPS
     'apps.users',
 ]
-
 
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -60,7 +60,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 ]
-
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -84,7 +83,6 @@ TEMPLATES = [
     },
 ]
 
-
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
@@ -105,7 +103,6 @@ DATABASES['default']['OPTIONS'] = {
 
 DEBUG = env.bool('DEBUG', False)
 
-
 # URL Configuration
 # ------------------------------------------------------------------------------
 
@@ -113,19 +110,16 @@ ROOT_URLCONF = 'config.urls'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 
 ADMINS = env.list('ADMINS', default=['butterflynet@butterfly.com.au'])
-
 
 # INTERNATIONALIZATION
 # ------------------------------------------------------------------------------
@@ -168,6 +162,10 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = root('media')
 MEDIA_URL = '/media/'
+
+# TEST
+# ------------------------------------------------------------------------------
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # AWS
 # ------------------------------------------------------------------------------
