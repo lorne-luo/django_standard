@@ -1,0 +1,9 @@
+Django==2.0.13
+django-environ==0.4.4
+mysqlclient==1.3.12
+django-extensions==1.9.9
+djangorestframework==3.9.4
+django-storages==1.7.1
+boto3==1.9.139
+django-ses==0.8.10
+django-allow-cidr==0.3.1
