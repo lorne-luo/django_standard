@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 from __future__ import absolute_import, unicode_literals
 
 import os
+import time
+
 import environ
 
 root = environ.Path(__file__) - 3  # (/config/settings/base.py - 3 = /)
@@ -19,6 +21,8 @@ BASE_DIR = root()
 
 # AUTH & USER
 AUTH_USER_MODEL = 'users.user'
+
+STARTUP_TIMESTAMP = int(time.time())
 
 # Load operating system environment variables and then prepare to use them
 env = environ.Env()
