@@ -11,7 +11,10 @@ class Command(BaseCommand):
         admin = User.objects.filter(is_superuser=True).first()
         if not admin:
             admin = User.objects.create_superuser(email='butterflynet@butterfly.com.au',
+                                                  username='butterflynet@butterfly.com.au',
                                                   password='But3as2flying',
                                                   first_name='butterfly',
                                                   last_name='butterfly')
-        self.stdout.write(self.style.SUCCESS('Superuser and contributor group created.'))
+            self.stdout.write(self.style.SUCCESS('Superuser and contributor group created.'))
+        else:
+            self.stdout.write(self.style.ERROR('Superuser is already existed, skipped.'))
