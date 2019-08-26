@@ -1,4 +1,8 @@
+import logging
+
 from django.contrib.auth.middleware import AuthenticationMiddleware
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileAuthenticationMiddleware(AuthenticationMiddleware):
@@ -8,6 +12,7 @@ class ProfileAuthenticationMiddleware(AuthenticationMiddleware):
         2. register this middleware in django settings
         3. use `request.profile` to get user profile in every views
     """
+
     def process_request(self, request):
         super(ProfileAuthenticationMiddleware, self).process_request(request)
         profile = getattr(request.user, 'profile', None)

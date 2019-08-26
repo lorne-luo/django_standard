@@ -10,6 +10,8 @@ SECRET_KEY = env('SECRET_KEY', default='27ccw6=vv%*m=0+u)duqrtby6!nzw$f(l7v(!in1
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '.butterfly.com.au', ])
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 INSTALLED_APPS += ['django_extensions']
 
 try:

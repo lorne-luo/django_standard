@@ -19,13 +19,22 @@ root = environ.Path(__file__) - 3  # (/config/settings/base.py - 3 = /)
 
 BASE_DIR = root()
 
-# AUTH & USER
-AUTH_USER_MODEL = 'users.user'
-
 STARTUP_TIMESTAMP = int(time.time())
 
 # Load operating system environment variables and then prepare to use them
 env = environ.Env()
+env_file = root('.env')
+if os.path.exists(env_file):
+    env.read_env(env_file)
+
+# AUTH & USER
+BASE_URL = env('BASE_URL')
+AUTH_USER_MODEL = 'auth_user.User'
+LOGIN_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/logout/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+BASE_CMS_URL=env('BASE_CMS_URL')
+SITE_ID = 1
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -35,6 +44,7 @@ INSTALLED_APPS = [
     # DJANGO_APPS
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -45,7 +55,7 @@ INSTALLED_APPS = [
     'django_nose',
 
     # LOCAL_APPS
-    'apps.users',
+    'apps.auth_user',
 ]
 
 # MIDDLEWARE CONFIGURATION
@@ -124,6 +134,24 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 
 ADMINS = env.list('ADMINS', default=['butterflynet@butterfly.com.au'])
+
+# Password validation
+# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 # INTERNATIONALIZATION
 # ------------------------------------------------------------------------------

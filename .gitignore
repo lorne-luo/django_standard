@@ -6,6 +6,7 @@ node_modules
 venv
 __pycache__
 *.sqlite3
+locale
 .backup
 *.ignore
 *.csv
