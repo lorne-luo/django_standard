@@ -1,0 +1,20 @@
+{% load static %}
+<header class="page-head" role="header">
+    <div class="wrapper-large">
+        <a href="{{ BASE_CMS_URL }}" id="logo" class="logo">
+            <img src="{% static 'img/stylelab-logo.png' %}"/>
+        </a>
+        <div class="page-navigation-menu">
+            {% if request.user.is_authenticated and dashboard %}
+                {% include "includes/menu/main-menu.html" with parent=site_root calling_page=self currentpage=activepage %}
+            {% else %}
+            <ul class="nav navbar-nav">
+                <li class="level1 btn btn-tertiary"><a href="/login/"><span class="menu-text">log in</span></a></li>
+            </ul>
+            {% endif %}
+        </div>
+        <div class="btn-menu">
+            <div class="icons-toggle"><span></span><span></span><span></span><span></span></div>
+        </div>
+    </div>
+</header>

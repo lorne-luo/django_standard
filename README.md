@@ -22,3 +22,15 @@ Environment Variables
 - AWS_SECRET_ACCESS_KEY
 
 See docs/ for more 
+
+
+Create Stripe Webhook with `api_version`
+```
+import stripe
+stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
+stripe.WebhookEndpoint.create(
+  url='https://example.com/my/webhook/endpoint',
+  enabled_events=['charge.failed', 'charge.succeeded']
+)
+```

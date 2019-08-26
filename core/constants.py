@@ -1,3 +1,5 @@
+import pycountry
+
 MALE = 'Male'
 FEMALE = 'Female'
 
@@ -41,3 +43,15 @@ AU_CITY_CHOICES = (
     (AU_DARWIN, AU_DARWIN),
     (AU_CANBERRA, AU_CANBERRA),
 )
+
+COUNTRIES_CHOICES = [(x.name, x.name) for x in pycountry.countries]
+
+ACTIVE = 'ACTIVE'
+INACTIVE = 'INACTIVE'
+DRAFT = 'DRAFT'
+USER_STATUS_CHOICES = (
+    (ACTIVE, ACTIVE),
+    (INACTIVE, INACTIVE),
+    (DRAFT, DRAFT),
+)
+

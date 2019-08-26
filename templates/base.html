@@ -20,20 +20,76 @@
         </title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#fbd2da" />
+        <link href="https://fonts.googleapis.com/css?family=Rokkitt:300&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon.png' %}">
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/mysite.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}">
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
         {% endblock %}
+        {% block extra_head %}
+        {% endblock %}
+
+        {# Google analytic code #}
+        {% if GOOGLE_TAG_MANAGER|length > 0 %}
+             <!-- Google Tag Manager -->
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{{ GOOGLE_TAG_MANAGER }}');</script>
+            <!-- End Google Tag Manager -->
+        {% endif %}
+
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% block content %}{% endblock %}
+    <body class="{% block body_class %}{% endblock %} {% block col %}{% endblock %}">
+        {# Google tag manager(noscript) #}
+        {% if GOOGLE_TAG_MANAGER|length > 0 %}
+         <noscript>
+         <iframe src="https://www.googletagmanager.com/ns.html?id={{ GOOGLE_TAG_MANAGER }}"height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        {% endif %}
+
+        {# Header Bloack #}
+        {% block header %}
+            {% include "includes/header.html" with parent=site_root calling_page=self %}
+        {% endblock header %}
+
+        {# Content Bloack #}
+        <div class="page-content">
+            {% block banner %}
+                {% include "includes/banner.html" with parent=site_root calling_page=self %}
+            {% endblock %}
+            <div class="wrapper">
+                <div class="page-content-wrapper">
+                    {% if request.user.is_authenticated %}
+                    {% block content_left %}
+                        <div class="page-content-left">
+                            <aside>
+                                {% include "includes/menu/main-menu.html" with parent=site_root calling_page=self sidemenu="menu-side" %}
+                            </aside>
+                        </div>
+                    {% endblock %}
+                    {% endif %}
+                    <main class="page-content-main" role="main">
+                    {% block content %}{% endblock %}
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        {# Footer Block #}
+        {% block footer %}
+            {% include "includes/footer.html" %}
+        {% endblock footer %}
 
         {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/mysite.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/accordion-menu.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/vendor/vendor.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/main.min.js' %}"></script>
+
 
         {% block extra_js %}
             {# Override this in templates to add extra javascript #}

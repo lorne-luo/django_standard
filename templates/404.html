@@ -1,9 +1,34 @@
 {% extends "base.html" %}
+{% load static %}
+{% block banner %}{% endblock %}
+{% block col %}{% endblock %}
+{% block content_left %}{% endblock %}
+{% block body_class %}error-page{% endblock %}
 
-{% block body_class %}template-404{% endblock %}
+{% block header %}
+<header class="page-head">
+        <div class="wrapper-large">
+            <div class="logo">
+                <a href="/">
+                    <img src="{% static 'img/stylelab-logo.png' %}"/>
+                </a>
+            </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
 
 {% block content %}
-    <h1>Page not found</h1>
+<div class="wrapper">
+    <h1 class="error-page__heading">Page not found</h1>
+    <div class="error-page__body">
+        <h3>Oh no! The content
+                you were looking for appears to be missing.</h3>
+        <h4>Please visit our&nbsp;<a href="/" title="Go to the home page">Home</a>
+            page to find what you are looking for.</h4>
+    </div>
+</div>
+{% endblock %}
 
-    <h2>Sorry, this page could not be found.</h2>
+{% block footer %}
 {% endblock %}

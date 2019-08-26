@@ -1,0 +1,29 @@
+<ul class="nav navbar-nav {{sidemenu}}">
+	{% if request.user.is_authenticated %}
+		{% if not sidemenu %}
+		<li class="level1 intro">
+	        Hi, {{ request.user.first_name}}
+	    </li>
+        {% endif %}
+        <li class="level1 parent deeper active">
+        <a href="/dashboard"
+        class="dropdown-toggle {% if not sidemenu %}btn-mystyle{% endif %}" id="ddtoggle_13" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-action="link">
+        <span class="menu-text">my stylelab</span> <span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="ddtoggle_13">
+            <li class="level2 {% if currentpage == "subscription" %}active{% endif %}">
+                <a href="{% url 'customer_subscriptions' %}"><span class="menu-text">subscription</span></a>
+            </li>
+            <li class="level2 {% if currentpage == "profile" %}active{% endif %}">
+                <a href="{% url 'customer_profile' %}"><span class="menu-text">profile</span></a>
+            </li>
+            <li class="level2 {% if currentpage == "billing" %}active{% endif %}">
+                <a href="{% url 'payment_detail' %}"><span class="menu-text">billing</span></a>
+            </li>
+            <li class="level2 ">
+        		<a href="/logout"><span class="menu-text">log out</span></a>
+    		</li>
+        </ul>
+        </li>
+    {% endif %}
+</ul>
+

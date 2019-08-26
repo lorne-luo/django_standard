@@ -53,6 +53,10 @@ INSTALLED_APPS = [
 
     # THIRD_PARTY_APPS
     'django_nose',
+    'pinax.stripe',
+    'django_ses',
+    'captcha',
+    'rest_framework',
 
     # LOCAL_APPS
     'apps.auth_user',
@@ -92,6 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.django.context_processors.global_settings',
             ],
         },
     },
@@ -127,7 +132,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='dev+stylelab-qa@butterfly.com.au')
 
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -201,10 +207,38 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # AWS
 # ------------------------------------------------------------------------------
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='')
-AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default="ap-southeast-2")
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default='')
+# S3
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default="ap-southeast-2")
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+# SES
+AWS_SES_REGION_NAME = env('AWS_SES_REGION_NAME', default='us-east-1')
+AWS_SES_REGION_ENDPOINT = f'email.{AWS_SES_REGION_NAME}.amazonaws.com'
+
+# STRIPE INTEGRATION VIA PINAX_STRIPE
+# ------------------------------------------------------------------------------
+PINAX_STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY")
+PINAX_STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+PINAX_STRIPE_API_VERSION = "2015-10-16"
+PINAX_STRIPE_SUBSCRIPTION_TAX_PERCENT = 10
+
+# reCAPTCHA
+# ------------------------------------------------------------------------------
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+NOCAPTCHA = True  # enable no captcha
+
+# Google Analytic
+GOOGLE_TAG_MANAGER = env('GOOGLE_TAG_MANAGER', default='')
+
+# Terms of use and privacy policy
+TERMS_OF_USE_URL = env('TERMS_OF_USE_URL')
+PRIVACY_POLICY_URL = env('PRIVACY_POLICY_URL')
+CONTACT_URL = env('CONTACT_URL')
 
 # PROJECT SETTINGS
 # ------------------------------------------------------------------------------

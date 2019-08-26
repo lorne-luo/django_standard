@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -8,10 +9,31 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>Internal server error</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon.png' %}">
     </head>
-    <body>
-        <h1>Internal server error</h1>
-
-        <h2>Sorry, there seems to be an error. Please try again soon.</h2>
-    </body>
+    <body class="error-page">
+            <header class="page-head">
+                <div class="wrapper-large">
+                    <a class="logo" href="/">
+                         <img src="{% static 'img/stylelab-logo.png' %}"/>
+                    </a>
+                    </div>
+                </div>
+            </header>
+            <main class="page-content">
+                <div class="wrapper">
+                    <div class="error-page__heading">
+                        <h1>Internal server error<span class="fullstop-option1">.</span></h1>
+                    </div>
+                    <div class="error-page__body">
+                        <div class="wrapper">
+                            <h3>
+                                Sorry, there seems to be an error. <br>Please try again soon.
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </body>
 </html>

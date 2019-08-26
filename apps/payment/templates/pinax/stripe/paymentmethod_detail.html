@@ -1,0 +1,32 @@
+{% extends "pinax/stripe/base.html" %}
+{% block body_class %}{{ block.super }}two_column_l template-onboarding  pinax-stripe-payment-methods{% endblock %}
+{% block banner %}{% with bannertitle='billing.' bannertext='' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block content_left %}{% with currentpage='billing' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block header %}{% with activepage='billing' dashboard='True' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block content %}
+<div class="pinax-stripe-payment-methods-container template-onboarding__form ">
+    <h2 class="template-onboarding__heading">
+        Payment Methods<span class="fullstop-option1">.</span>
+    </h2>
+    <div>
+        <div class="dashboard-subscription__block-details-wrapper">
+            <label class="dashboard-subscription__block-details-label">Type</label>
+            <td>{{ object.brand }}</td>
+        </div>
+        <div class="dashboard-subscription__block-details-wrapper">
+            <label class="dashboard-subscription__block-details-label">Card Number</label>
+            <td>**** **** **** {{ object.last4 }}</td>
+        </div>
+        <div class="dashboard-subscription__block-details-wrapper">
+            <label class="dashboard-subscription__block-details-label">Expiration</label>
+            <td>{{ object.exp_month }} / {{ object.exp_year }}</td>
+        </div>
+        <div class="dashboard-subscription__block-details-wrapper">
+            <label class="dashboard-subscription__block-details-label">Create Date</label>
+            <td>{{ object.created_at }}</td>
+        </div>
+    </div>
+    <br/>
+    <a class="btn btn-primary" href="{% url "payment_update" %}">Update</a>
+</div>
+{% endblock %}

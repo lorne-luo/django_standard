@@ -1,0 +1,240 @@
+{% extends "pinax/stripe/base.html" %}
+{% block body_class %}{{ block.super }}two_column_l template-onboarding template-payment pinax-stripe-payment-methods{% endblock %}
+{% block banner %}{% with bannertitle='billing.' bannertext='' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block content_left %}{% with currentpage='billing' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block header %}{% with activepage='billing' dashboard='True' %}{{ block.super }}{% endwith %}{% endblock %}
+{% block content %}
+
+    <div class="pinax-stripe-payment-methods-create-container ">
+        <form action="" method="post" id="payment-form" class="template-onboarding__form formContainer"  autocomplete="off" >
+        <h2 class="template-onboarding__heading">Update payment method<span class="fullstop-option1">.</span></h2>
+        {% if errors %}
+            <div id="system-message">
+                <div class="errors alert-error">
+                    <span class="alert-title">Alert</span>
+                    {{ errors }}
+                </div>
+            </div>
+        {% endif %}
+            {% csrf_token %}
+            <div class="credit-card-form-wrapper fieldWrapper">
+                <div class="credit-card-form-field">
+                    <label for="card-number">
+                        Card Number
+                    </label>
+                    <div class="field-input">
+                        <div id="card-number">
+                            <!-- a Stripe Element will be inserted here. -->
+                        </div>
+                        <div class="error-message fieldErrorWrapper">
+                            <div id="card-number-errors" class="errorlist" role="alert"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="credit-card-form-field">
+                    <label for="card-name">Card Holders Name</label>
+                    <div class="field-input">
+                        <div>
+                            <input id="card-name" type="text" class="name" placeholder="Card holder name">
+                        </div>
+                        <div class="error-message fieldErrorWrapper">
+                            <div id="card-name-errors" class="errorlist" role="alert"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-container flex-container--space-between">
+                    <div class="credit-card-form-field credit-card-form-field--expiry">
+                        <label for="card-expiry">
+                            Expiry Date
+                        </label>
+                        <div class="field-input">
+                            <div id="card-expiry">
+                                <!-- a Stripe Element will be inserted here. -->
+                            </div>
+                            <div class="error-message fieldErrorWrapper">
+                                <div id="card-expiry-errors" class="errorlist" role="alert"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="credit-card-form-field credit-card-form-field--cvc">
+                        <label for="card-cvc">
+                            CVV/CVC
+                        </label>
+                        <div class="field-input">
+                            <div id="card-cvc">
+                                <!-- a Stripe Element will be inserted here. -->
+                            </div>
+                            <div class="error-message fieldErrorWrapper">
+                                <div id="card-cvc-errors" class="errorlist" role="alert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if error %}
+                    <div class="alert alert--error">{{ error|safe }}</div>
+                {% endif %}
+                <div class="template-review__section template-payment__section">
+                <div class="term-condition">
+                    By submitting your credit card details, you accept our <a target="_blank"
+                        href="{{ TERMS_OF_USE_URL }}">Terms of Use</a>.
+                </div>
+                <button class="btn btn-submit" id="submit-button" type="submit">Update payment<span class="icon icon-arrow-right"></span></button>
+                </div>
+
+            </div>
+            <div class="loader-blob">
+            <!-- https://9elements.github.io/fancy-border-radius/full-control.htm -->
+                <span class="loader-text">Loading</span>
+                <span class="blob blob-1 blob-1-1 "></span>
+                <span class="blob blob-2"></span>
+                <span class="blob blob-3"></span>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+    {% include "pinax/stripe/_stripe_js.html" %}
+
+
+
+    <script>
+        // Create a Stripe client
+        var stripe = Stripe('{{ PINAX_STRIPE_PUBLIC_KEY }}');
+
+        // Create an instance of Elements
+        var elements = stripe.elements();
+
+        // Custom styling can be passed to options when creating an Element.
+        // (Note that this demo uses a wider set of styles than the guide below.)
+        var style = {
+            base: {
+                color: '#000',
+                lineHeight: '24px',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: 'rgba(0,0,0,0.5)'
+                }
+            },
+            invalid: {
+                color: '#eb1c26',
+                iconColor: '#eb1c26',
+                ':focus': {
+                    color: '#303238',
+                },
+            }
+        };
+
+        // Create an instance of the card Element
+        var cardNumber = elements.create('cardNumber', {style: style});
+        var cardExpiry = elements.create('cardExpiry', {style: style});
+        var cardCvc = elements.create('cardCvc', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>
+        cardNumber.mount('#card-number');
+        cardExpiry.mount('#card-expiry');
+        cardCvc.mount('#card-cvc');
+
+        // Scroll to first error
+        function scrollToError(error) {
+            removeLoadingButton();
+            var offset = 0;
+            if (error.code == 'incomplete_number') {
+                 offset = $('#card-number').offset().top - 30;
+            }
+            else if (error.code == 'incomplete_expiry') {
+                 offset = $('#card-expiry').offset().top - 30;
+            }
+            else if (error.code == 'incomplete_cvc') {
+                 offset = $('#card-cvc').offset().top - 30;
+            }
+            if(offset){
+                var time = Math.abs(window.scrollY - offset) * 1;
+                $('html, body').animate({
+                    scrollTop: offset
+                }, time);
+            }
+        }
+
+        function showLoadingButton(){
+            $('.loader-blob').addClass('active');
+            $("body").addClass("toggled-drawer-offset-overlay");
+        }
+
+        function removeLoadingButton() {
+            $('.loader-blob').removeClass('active');
+            $("body").removeClass("toggled-drawer-offset-overlay");
+        }
+
+        // Handle real-time validation errors from the card number.
+        cardNumber.addEventListener('change', function (event) {
+            var displayError = document.getElementById('card-number-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle real-time validation errors from the card expire date .
+        cardExpiry.addEventListener('change', function (event) {
+            var displayError = document.getElementById('card-expiry-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle real-time validation errors from the card cvc.
+        cardCvc.addEventListener('change', function (event) {
+            var displayError = document.getElementById('card-cvc-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            var options = {
+                name: document.getElementById('card-name').value,
+            };
+
+            // Show loading button
+            showLoadingButton();
+
+            setTimeout(function(){
+                stripe.createToken(cardExpiry, options).then(function (result) {
+                    if (result.error) {
+                        scrollToError(result.error);
+                        cancelSpinner();
+
+                        // Inform the user if there was an error
+                        // var errorElement = document.getElementById('card-errors');
+                        // errorElement.textContent = result.error.message;
+                        return false;
+                    } else {
+                        //showLoadingButton($('#submit-button'));
+                        console.log(result.token.id);
+                        var input = $("<input>")
+                            .attr("type", "hidden")
+                            .attr("name", "cardToken").val(result.token.id);
+                        $('#payment-form').append($(input)).submit();
+                    }
+                });
+            }, 1000);
+
+
+        });
+    </script>
+{% endblock %}
+
