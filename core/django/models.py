@@ -3,21 +3,45 @@ from django.utils.text import slugify
 from django_extensions.db.fields import AutoSlugField
 
 
-class ArchiveModelManager(models.Manager):
-    def active(self):
-        return super().all().filter(is_archived=False).order_by('-created_at')
-
-
 class BaseModel(models.Model):
-    # common fields
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     update_at = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class ArchiveQuerySet(models.QuerySet):
+
+    def filter(self, *args, **kwargs):
+        fields = list(filter(lambda x: x.startswith(ArchiveModel.archive_field_name), kwargs.keys()))
+
+        if not fields:
+            kwargs[ArchiveModel.archive_field_name] = False
+        return super(ArchiveQuerySet, self).filter(*args, **kwargs)
+
+
+class ArchiveModelManager(models.Manager):
+    def non_archives(self):
+        return super().filter(is_archived=False)
+
+    def archives(self):
+        return super().filter(is_archived=True)
+
+
+class ArchiveModel(BaseModel):
+    """abstract archiveable model"""
+    archive_field_name = 'is_archived'
     is_archived = models.BooleanField(blank=True, default=False)
 
     objects = ArchiveModelManager()
 
     class Meta:
         abstract = True
+
+    @property
+    def not_archived(self):
+        return not self.is_archived
 
 
 class NameSlugModel(models.Model):
