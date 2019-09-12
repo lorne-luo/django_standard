@@ -35,15 +35,24 @@ class AWSS3URLs(object):
     def upload_url(cls, object_name='', fields=None, conditions=None, expiration=3600):
         fields = fields or {}
         expired_at = timezone.now() + relativedelta(seconds=expiration - 120)
-        fields['expired_at'] = datetime.timestamp(expired_at)
+        expired_at = datetime.timestamp(expired_at)
 
         try:
-            url = s3_client.generate_presigned_post(settings.AWS_STORAGE_BUCKET_NAME,
-                                                    object_name,
-                                                    Fields=fields,
-                                                    Conditions=conditions,
-                                                    ExpiresIn=expiration)
-            return url
+            response = s3_client.generate_presigned_post(settings.AWS_STORAGE_BUCKET_NAME,
+                                                         object_name,
+                                                         Fields=fields,
+                                                         Conditions=conditions,
+                                                         ExpiresIn=expiration)
+
+            response['folder_options'] = cls.get_folders()
+            response['expired_at'] = expired_at
+            return response
         except ClientError as e:
             logging.error(e)
             return None
+
+    @classmethod
+    def get_folders(cls):
+        # todo list folder options
+        folders = []
+        return folders
