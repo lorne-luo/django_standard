@@ -1,3 +1,5 @@
+import inspect
+
 import graphene
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -138,6 +140,14 @@ class CreateMutationMixin(BaseMutationMixin):
         return None
 
     @classmethod
+    def get_create_from_model(cls):
+        """check model have classmethod create() or not"""
+        create_func = getattr(cls.model, 'create', None)
+        if inspect.ismethod(create_func):
+            return create_func
+        return None
+
+    @classmethod
     def process(cls, root, info, **inputs):
         if cls.model:
             input_name = cls.get_primary_input_name()
@@ -145,7 +155,12 @@ class CreateMutationMixin(BaseMutationMixin):
             if not data:
                 raise MutationException(f'Please provide data for {input_name}', code='mandatory')
             try:
-                obj = cls.model.objects.create(**data)
+                # try to use create classmethod in model
+                create_func = cls.get_create_from_model()
+                if create_func:
+                    obj = create_func(**data)
+                else:
+                    obj = cls.model.objects.create(**data)
             except Exception as ex:
                 raise MutationException(str(ex), code=ex.__class__.__name__)
 
