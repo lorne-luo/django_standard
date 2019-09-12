@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django_extensions.db.fields import AutoSlugField
+from model_utils.managers import InheritanceManager
 
 
 class BaseModel(models.Model):
@@ -28,6 +29,10 @@ class ArchiveModelManager(models.Manager):
     def archives(self):
         return super().filter(is_archived=True)
 
+
+
+class InheritanceArchiveManager(ArchiveModelManager, InheritanceManager):
+    pass
 
 class ArchiveModel(BaseModel):
     """abstract archiveable model"""
