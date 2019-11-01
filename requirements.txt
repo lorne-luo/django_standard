@@ -8,7 +8,7 @@ django-ses==0.8.10
 django-allow-cidr==0.3.1
 django-nose==1.4.6
 pycountry==18.12.8
-Pillow==6.1.0
+Pillow==6.2.0
 pinax-stripe==4.4.0
 stripe==2.32.1
 django-storages==1.7.1
